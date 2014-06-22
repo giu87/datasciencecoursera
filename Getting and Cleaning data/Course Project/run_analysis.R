@@ -1,8 +1,6 @@
-#########################################################################
-#				   Course : Getting and Cleaning Data					#
-#						Author : Giuliano Vesci							#
-#	 					   Date : 22/06/2014							#
-#########################################################################
+###   	Course 	: Getting and Cleaning Data
+###		Author 	: Giuliano Vesci			
+###   	Date 	: 22/06/2014
 
 # include data.table and reshape libraries in case they are not installed
 if (!require("data.table"))
