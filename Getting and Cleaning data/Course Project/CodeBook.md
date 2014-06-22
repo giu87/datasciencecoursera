@@ -26,7 +26,7 @@ In order to process the raw data set, we need to run several transformations. In
 
 0. We include the needed dependencies and read the input files using ```require``` and ```read.table``` functions
 
-1. Merges the training and the test sets to create one data set. 
+1. Merges the training and the test sets to create one data set.  
 This is done using the functions ```cbind``` (to merge x_test, y_test and subject_test for both train and test data sets) and the ```rbind``` to merge the two data sets together.
 The result data will have 10299 rows and 561 columns.
 
