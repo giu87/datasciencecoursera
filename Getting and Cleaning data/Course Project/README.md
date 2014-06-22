@@ -16,10 +16,10 @@ You should create one R script called run_analysis.R that does the following:
 
 ## Steps involved to obtain the results
 
-1. Download the data source at "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip" and put into a folder called "data" in your project directory.
-2. Add ```run_analysis.R``` to the project directory.
-3. Before running the script, be sure you have set the right folder as working directory using  ```setwd()```
-4. Run ```source("run_analysis.R")```. A new file called ```tiny_data.txt``` will be created in the "YOUR_DIRECTORY/data" folder, containing the tidy data 
+1. Download the data source at "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip" and put into a folder called "data" in your PROJECT_DIRECTORY.
+2. Add ```run_analysis.R``` to the PROJECT_DIRECTORY.
+3. Before running the script, be sure you have set the right folder as PROJECT_DIRECTORY using  ```setwd()```
+4. Run ```source("./run_analysis.R")```. A new file called ```tiny_data.txt``` will be created in the "PROJECT_DIRECTORY/data" folder, containing the tidy data 
 
 ## Dependencies
 
