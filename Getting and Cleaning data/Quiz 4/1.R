@@ -1,0 +1,5 @@
+download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv", "getdata%2Fdata%2Fss06hid.csv")
+data <- read.csv("getdata%2Fdata%2Fss06hid.csv")
+x <- names(data)
+x_splitted <- strsplit(x, "wgtp")
+print(x_splitted[123])
