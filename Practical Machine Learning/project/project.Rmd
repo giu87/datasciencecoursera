@@ -1,0 +1,103 @@
+---
+title: "Practical Machine Learning project"
+author: "Giuliano Vesci"
+date: "Thursday, August 20, 2015"
+output: html_document
+---
+
+# Introduction
+
+This is a document which describes my analysis conducted for the final project of the Coursera course "Practical Machine Learning" in the Data Science Specialization.
+
+# Data
+The data used for the project comes from  http://groupware.les.inf.puc-rio.br/har and is supposed to track data from a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks.
+
+# Load data and split 
+
+```{r}
+
+set.seed(614)
+library(lattice); 
+library(ggplot2); 
+library(caret)
+
+t <- read.csv("C:\\Users\\Giuliano\\Development\\Git\\workspace\\datasciencecoursera\\Practical Machine Learning\\pml-training.csv", header= T)
+inTrain <- createDataPartition(y=t$classe, p=0.9, list=FALSE)
+training <- t[inTrain,]
+testing <- t[-inTrain,]
+
+```
+
+I here subsampled the training and cross-validation data sets in 90% rate. I did not use other more complex cross validation methods such as K-fold.
+
+## Train and predict
+
+I used the train function over a bynch of features in order to get a model to predict the outcome of the training set:
+
+```{r}
+
+library(caret)
+
+modFit <- train(classe ~ user_name + pitch_arm + yaw_arm + roll_arm + roll_belt + pitch_belt + yaw_belt + gyros_belt_x + gyros_belt_y + gyros_belt_z + accel_belt_x + accel_belt_y + accel_belt_z + magnet_belt_x + magnet_belt_y + magnet_belt_z + gyros_arm_x + gyros_arm_y + gyros_arm_z + accel_arm_x + accel_arm_y + accel_arm_z + magnet_arm_x + magnet_arm_y + magnet_arm_z + roll_dumbbell + pitch_dumbbell + yaw_dumbbell, method="gbm", data=training, verbose=FALSE)
+
+
+```
+
+The execution of the function takes approx. 25 minutes.
+
+```{r}
+print(modFit)
+predictTr <- predict(modFit,training)
+table(predictTr, training$classe)
+```
+
+The model correctly classify 93.6 % of the observations, which is a relatively good result. 
+
+## Model evaluation
+
+```{r}
+summary(modFit,n.trees=150)
+```
+
+The model uses a total amount of 150 trees. Looking at the model, we can see that the "roll_belt" and "yaw_belt" features were by far the most important in terms of variable influence.
+
+```{r}
+library(ggplot2)
+qplot(roll_belt, yaw_belt,colour=classe,data=training)
+```
+
+These two top features are, however, not enough to be considered alone as a good predictor. The next plot further demonstrates the improved performance gained by using boosting iterations.
+
+
+```{r}
+ggplot(modFit)
+```
+
+Let's now check with the 10% subsample to get how well the model fits out-of-sample performance
+```{r}
+predictTe <- predict(modFit,testing)
+table(predictTe, testing$classe)
+```
+
+The algorithm actually peforms only does slightly worse on the testing subset than it did on the full training set, correctly classifying 93.4 percent of the observations.
+
+# Predicting in the Test Set
+
+We can now use the algorithm on the testing sample in order to get predictions and send the result to the Coursera evaluation. 
+
+```{r}
+
+tes <- read.csv("C:\\Users\\Giuliano\\Development\\Git\\workspace\\datasciencecoursera\\Practical Machine Learning\\pml-testing.csv")
+answers <- as.character(predict(modFit, tes))
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+pml_write_files(answers)
+
+```
+
+After submitting these answers, it turns out that the algorithm correctly predicted the outcome for 20/20 observations further confirming its strong out-of-sample classification accuracy.

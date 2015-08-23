@@ -1,0 +1,92 @@
+---
+title: "Practical ML - quiz 2"
+author: "Giuliano Vesci"
+date: "Sunday, August 16, 2015"
+output: html_document
+---
+
+# Question 1
+
+```{r}
+library(AppliedPredictiveModeling)
+library(caret)
+data(AlzheimerDisease)
+
+# adData = data.frame(diagnosis,predictors)
+# trainIndex = createDataPartition(diagnosis, p = 0.50,list=FALSE)
+# training = adData[trainIndex,]
+# testing = adData[-trainIndex,]
+```
+
+
+# Question 2
+
+```{r}
+
+library(AppliedPredictiveModeling)
+data(concrete)
+library(caret)
+set.seed(1000)
+inTrain = createDataPartition(mixtures$CompressiveStrength, p = 3/4)[[1]]
+training = mixtures[ inTrain,]
+testing = mixtures[-inTrain,]
+
+# There are values of zero so when you take the log() transform those values will be -Inf
+
+```
+
+
+# Question 3
+
+```{r}
+
+library(caret)
+library(AppliedPredictiveModeling)
+set.seed(3433)
+data(AlzheimerDisease)
+adData = data.frame(diagnosis,predictors)
+inTrain = createDataPartition(adData$diagnosis, p = 3/4)[[1]]
+training = adData[ inTrain,]
+testing = adData[-inTrain,]
+
+#Find all the predictor variables in the training set that begin with IL. Perform principal components on these 
+#variables with the preProcess() function from the caret package. Calculate the number of principal components needed 
+#to capture 90% of the variance. How many are there?
+
+IL <- training[,grep('^IL', x = names(training) )]
+preProc <- preProcess(IL, method='pca', thresh=0.8, 
+                      outcome=training$diagnosis)
+preProc$rotation # 7 components
+
+```
+
+
+# Question 4
+
+```{r}
+#Load the Alzheimer's disease data using the commands:
+
+library(caret)
+library(AppliedPredictiveModeling)
+set.seed(3433)
+data(AlzheimerDisease)
+adData = data.frame(diagnosis,predictors)
+inTrain = createDataPartition(adData$diagnosis, p = 3/4)[[1]]
+training = adData[ inTrain,]
+testing = adData[-inTrain,]
+
+# Create a training data set consisting of only the predictors with variable names beginning with IL and the diagnosis. Build two predictive models, one using the predictors as they are and one using PCA with principal components explaining 80% of the variance in the predictors. Use method="glm" in the train function. What is the accuracy of each method in the test set? Which is more accurate?
+
+install.packages('e1071', dependencies=TRUE)
+
+IL <- training[,c( grep('^IL', x = names(training) ), 1) ]
+modelFit <- train(diagnosis ~ ., data=IL, method = "glm")
+pp <- predict(modelFit, newdata=testing)
+
+C1 <- confusionMatrix(pp, testing$diagnosis)
+C1$overall[1]
+
+
+# 0.6463415
+
+```
