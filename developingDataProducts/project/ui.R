@@ -8,14 +8,14 @@ shinyUI(fluidPage(
     sidebarPanel(
       sliderInput("father",
                   "Father height:",
-                  min = 140,
-                  max = 200,
-                  value = 170),
+                  min = 50,
+                  max = 80,
+                  value = 60),
       sliderInput("mother",
                   "Mother height:",
-                  min = 140,
-                  max = 200,
-                  value = 160)
+                  min = 50,
+                  max = 80,
+                  value = 55)
     ),
   
     # Show a plot of the generated distribution

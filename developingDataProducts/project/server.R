@@ -8,17 +8,18 @@ data(GaltonFamilies)
 gf <- GaltonFamilies
 
 # transform inches to cms
-gf <- gf %>% mutate(fh=father*2.54,
-                    mh=mother*2.54,
-                    mph=midparentHeight*2.54,
-                    ch=childHeight*2.54)
+#gf <- gf %>% mutate(fh=father*2.54,
+#                    mh=mother*2.54,
+#                    mph=midparentHeight*2.54,
+#                    ch=childHeight*2.54)
 
 # linear model
-model <- lm(ch ~ fh + mh + gender, data=gf)
+model <- lm(childHeight ~ father + mother + gender, data=gf)
 
 shinyServer(function(input, output) {
 
   output$heightPlot <- renderPlot({
+    
     mh <- input$mother
     fh <- input$father
     

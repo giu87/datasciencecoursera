@@ -1,0 +1,67 @@
+Predict son-daughter height from parents
+========================================================
+author: giu87
+date: 20/11/2016
+
+Overview
+========================================================
+
+The data used for the application belongs to the GaltonFamilies data set, from the HistData R package.
+
+The main target of the application is to predict the height of the child of two parents. Given the height of the mother and the father (input values), predict the height of a son and a daughter.
+
+Given the two input heights, the application provide a visual representation of what the height of two potential childs wuold be.
+
+Building the model
+========================================================
+
+The model will be based on the father and mother's heights and the gender of the child.
+
+```{r, echo=F}
+library(GGally)
+library(HistData)
+data(GaltonFamilies)
+```
+
+```{r}
+gf <- GaltonFamilies
+model <- lm(childHeight ~ father + mother + gender, data=gf)
+
+model$coefficients
+```
+
+Plotting the data
+========================================================
+
+Once the model is created, we can expose a function which reads the input, predicts the height of the son and daughter and plot the results. 
+
+Here an example with father's height of 60" and mother's height of 55":
+
+```{r, echo=FALSE}
+    library(ggplot2)
+
+    fh <- 60
+    mh <- 55
+    
+    son <- predict(model, newdata=data.frame(father=fh, mother=mh, gender = "male"))
+    daughter <- predict(model, newdata=data.frame(father=fh, mother=mh, gender = "female"))
+    
+    yvals <- c("Father", "Son", "Daughter", "Mother")
+    df <- data.frame(
+      x = factor(yvals, levels= yvals, ordered=TRUE),
+      y = c(fh, son, daughter, mh),
+      colors = c("blue", "orange", "pink", "red")
+    )
+    
+    ggplot(df, aes(x=x, y=y, color=colors, fill=colors)) +
+      geom_bar(stat="identity", width=0.5) +
+      xlab("") +
+      ylab("Height (cm)") +
+      theme_minimal() +
+      theme(legend.position="none")
+```
+
+Where to find the application
+========================================================
+- The application can be found at https://giu87.shinyapps.io/DevelopingDataProdictsProject
+- GitHub repo containig the application code: https://github.com/giu87/datasciencecoursera/tree/master/developingDataProducts/project
